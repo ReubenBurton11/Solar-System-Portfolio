@@ -4,6 +4,7 @@ import { Loop } from "./systems/loop.js";
 import { createScene } from "./components/scene.js";
 import { createLights } from "./components/lights.js";
 import { createCamera } from "./components/camera.js";
+import createCube from "./components/cube.js";
 
 let camera;
 let renderer;
@@ -20,10 +21,17 @@ class World{
 
         container.append(renderer.domElement);
 
-        const {light, lightHelper} = createLights("white");
+        const {light, lightHelper} = createLights({
+            
+        });
+
+        let cube = createCube({
+
+        });
 
         loop.updateables.push(light);
-        scene.add(light);
+        loop.updateables.push(cube);
+        scene.add(light, cube, lightHelper);
 
         const resizer = new Resizer(container, camera, renderer);
         resizer.onResize = () => {
