@@ -1,7 +1,12 @@
-const setSize = (camera, renderer) => {
+const setSize = (camera, renderer, maxPixelCount = 3840*2160) => {
     const canvas = renderer.domElement;
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    const pixelRatio = window.pixelRatio;
+    let width = Math.floor(canvas.clientWidth * pixelRatio);
+    let height = Math.floor(canvas.clientHeight * pixelRatio);
+    const pixelCount = width * height;
+    const renderScale = pixelCount > maxPixelCount ? Math.sqrt(maxPixelCount / pixelCount): 1;
+    width = Math.floor(width * renderScale);
+    height = Math.floor(hieght * renderScale);
 
 
     if (width !== canvas.width || height !== canvas.height){
