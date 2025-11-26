@@ -1,9 +1,8 @@
 import { WebGLRenderer } from "three";
 
-function createRenderer()
+function createRenderer(container)
 {
-    const renderer = new WebGLRenderer({antialias : true});
-
+    const renderer = new WebGLRenderer({antialias : true, canvas: container});
     //renderer.physicallyCorrectLights = true;
 
     return renderer;

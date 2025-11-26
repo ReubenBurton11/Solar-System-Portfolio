@@ -13,13 +13,11 @@ let loop;
 
 class World{
     constructor(container){
+        renderer = createRenderer(container);
         camera = createCamera();
         scene = createScene("lightBlue");
-        renderer = createRenderer();
 
         loop = new Loop(camera, scene, renderer);
-
-        container.append(renderer.domElement);
 
         const {light, lightHelper} = createLights({
             
@@ -31,9 +29,9 @@ class World{
 
         loop.updateables.push(light);
         loop.updateables.push(cube);
-        scene.add(light, cube, lightHelper);
+        scene.add(light, cube);
 
-        const resizer = new Resizer(container, camera, renderer);
+        const resizer = new Resizer(camera, renderer);
         resizer.onResize = () => {
             this.render();
         };
