@@ -10,7 +10,6 @@
 import { onMounted, ref } from "vue";
 import { World } from "../world/world.js";
 import WebGL from "three/examples/jsm/capabilities/WebGL.js";
-import setRot from "../world/components/spaceship.js";
 
 const bHasWebGL = ref(true);
 

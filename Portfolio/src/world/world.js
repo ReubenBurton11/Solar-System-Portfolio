@@ -5,7 +5,8 @@ import { createScene } from "./components/scene.js";
 import { createLights } from "./components/lights.js";
 import { createCamera } from "./components/camera.js";
 import createCube from "./components/cube.js";
-import createSpaceship from "./components/spaceship.js";
+import { Spaceship } from "./components/spaceship.js";
+import { Vector3 } from "three";
 
 let camera;
 let renderer;
@@ -29,8 +30,8 @@ class World{
 
         });
 
-        spaceship = createSpaceship({
-            camera: camera,
+        spaceship = new Spaceship({
+            
         });
 
         loop.updateables.push(
@@ -52,7 +53,7 @@ class World{
     }
 
     setSpaceshipRot(value){
-        spaceship.rot = value;
+        spaceship.SetRotation(value);
     }
 
     render(){
