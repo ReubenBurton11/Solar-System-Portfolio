@@ -6,6 +6,11 @@ class Spaceship extends Object3D{
 
         let rotation = this.rotation; 
         let position = this.position;
+        this.velocity = new Vector3(0, 0, 0);
+        this.maxSpeed = 100;
+        this.maxBackSpeed = 10;
+        this.acceleration = 1;
+        this.rollAccel = 1;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
@@ -51,15 +56,34 @@ class Spaceship extends Object3D{
         rotation.set(0, 0, 0);
     }
 
-    SetRotation(newRot){
-        this.rotation.set(0, newRot, 0);
+    SetRotation(value){
+        this.rotation.setFromVector3(value);
+    }
+
+    AddRotation(value){
+        const vec = new Vector3(this.rotation.x, this.rotation.y, this.rotation.z);
+        vec.add(value);
+        this.rotation.setFromVector3(vec);
+    }
+
+    SetPosition(value){
+        this.position.setFromVector3(value);
+    }
+
+    SetVelocity(value){
+        this.velocity.set(value.x, value.y, value.z);
+        this.velocity.clampLength(-this.maxBackSpeed, this.maxSpeed);
+    }
+
+    AddVelocity(value){
+        this.velocity.add(value);
+        this.velocity.clampLength(-this.maxBackSpeed, this.maxSpeed);
     }
 
     tick = (delta) => {
-        const dir = this.localToWorld(new Vector3(0, 0, 1)).sub(this.localToWorld(new Vector3(0, 0, 0)));
-        const speed = 1;
-        const velo = dir.multiplyScalar(speed * delta);
-        this.position.add(velo);
+        const localVel = new Vector3(this.velocity.x, this.velocity.y, this.velocity.z);
+        const vel = this.localToWorld(localVel).sub(this.position).multiplyScalar(delta);
+        this.position.add(vel);
     }
 }
 
