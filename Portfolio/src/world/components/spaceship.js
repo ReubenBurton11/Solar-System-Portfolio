@@ -9,7 +9,8 @@ class Spaceship extends Object3D{
         this.velocity = new Vector3(0, 0, 0);
         this.maxSpeed = 100;
         this.maxBackSpeed = 10;
-        this.acceleration = 1;
+        this.acceleration = 10;
+        this.deceleration = 100;
         this.rollAccel = 1;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
@@ -37,9 +38,9 @@ class Spaceship extends Object3D{
         boostMesh.position.set(0, 0, -(dims[2]/2));
         boostMesh.rotation.set(-1.57, 0, 0);
 
-        const forwardVector = new Vector3(0, 0, 1);
-        const rightVector = new Vector3(1, 0, 0);
-        const upVector = new Vector3(0, 1, 0);
+        this.forwardVector = this.localToWorld(new Vector3(0, 0, 1));
+        this.rightVector = this.localToWorld(new Vector3(1, 0, 0));
+        this.upVector = this.localToWorld(new Vector3(0, 1, 0));
 
         lWingMesh.position.set(-1, 0, 0);
         lWingMesh.rotation.set(0, 0, 1.57);
@@ -53,7 +54,7 @@ class Spaceship extends Object3D{
         //spaceship.add(props.camera);
     
         position.set(0, 0, 0);
-        rotation.set(0, 0, 0);
+        rotation.set(0, Math.PI, 0);
     }
 
     SetRotation(value){
@@ -72,12 +73,12 @@ class Spaceship extends Object3D{
 
     SetVelocity(value){
         this.velocity.set(value.x, value.y, value.z);
-        this.velocity.clampLength(-this.maxBackSpeed, this.maxSpeed);
+        this.velocity.clampLength(0, this.velocity.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
     AddVelocity(value){
         this.velocity.add(value);
-        this.velocity.clampLength(-this.maxBackSpeed, this.maxSpeed);
+        this.velocity.clampLength(0, this.velocity.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
     tick = (delta) => {

@@ -22,7 +22,6 @@ class Controls{
         this.spaceship = spaceship;
 
         document.addEventListener('keydown', function(e){
-            console.log(keys);
             const key = e.key;
             for(let i = 0; i < keys.length; i++){
                 if (key == keys[i].value && !keys[i].bIsPressed){
@@ -46,13 +45,18 @@ class Controls{
             this.spaceship.AddVelocity(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.acceleration * delta));
         }
         if (this.keys[1].bIsPressed){
-            this.spaceship.AddRotation(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta));
+            this.spaceship.AddRotation(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta));
         }
         if (this.keys[2].bIsPressed){
-            this.spaceship.AddVelocity(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.acceleration * delta));
+            if (this.spaceship.velocity.z > 0){
+            this.spaceship.AddVelocity(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.deceleration * delta));
+            }
+            else{
+                this.spaceship.AddVelocity(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.acceleration * delta));
+            }
         }
         if (this.keys[3].bIsPressed){
-            this.spaceship.AddRotation(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta));
+            this.spaceship.AddRotation(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta));
         }
     }
 }
