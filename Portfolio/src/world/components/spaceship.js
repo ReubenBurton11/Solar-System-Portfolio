@@ -1,4 +1,5 @@
-import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, LatheGeometry, DoubleSide, ExtrudeGeometry} from "three"
+import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, LatheGeometry, DoubleSide, ExtrudeGeometry, Material} from "three"
+import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js'
 
 class Spaceship extends Object3D{
     constructor(props){
@@ -16,17 +17,32 @@ class Spaceship extends Object3D{
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
-        const bodyMat = new MeshPhongMaterial({color: "white", side: DoubleSide});
+        const bodyMat = new MeshPhongMaterial({color: "black", side: DoubleSide});
         const bodyMesh = new Mesh(bodyGeo, bodyMat);
 
+        const wFrontOuterHeight = 0.05;
+        const wBackOuterHeight = 0.1;
+        const wFrontInnerHeight = 0.1;
+        const wBackInnerHeight = 0.3;
+        const wFrontOuterDepth = 0.5;
+        const wBackOuterDepth = 1.2;
+        const wFrontInnerDepth = 0.8;
+        const wBackInnerDepth = 0.6;
+        const wFrontOuterWidth = -0.1;
+        const wBackOuterWidth = 0.5;
+        const wFrontInnerWidth = 0.5;
+        const wBackInnerWidth = 0.5;
+        let wPoints = [new Vector3(wFrontOuterHeight, wFrontOuterWidth, wFrontOuterDepth), new Vector3(-wFrontOuterHeight, wFrontOuterWidth, wFrontOuterDepth), new Vector3(-wFrontInnerHeight, -wFrontInnerWidth, wFrontInnerDepth), new Vector3(wFrontInnerHeight, -wFrontInnerWidth, wFrontInnerDepth),
+            new Vector3(wBackOuterHeight, wBackOuterWidth, -wBackOuterDepth), new Vector3(-wBackOuterHeight, wBackOuterWidth, -wBackOuterDepth), new Vector3(-wBackInnerHeight, -wBackInnerWidth, -wBackInnerDepth), new Vector3(wBackInnerHeight, -wBackInnerWidth, -wBackInnerDepth)
+        ];
         const wingShape = new Shape();
         wingShape.moveTo(0.2, 0);
         wingShape.lineTo(0.2, -0.8);
         wingShape.lineTo(-0.2, -0.8);
         wingShape.lineTo(-0.2, 0);
         wingShape.lineTo(0.2, 0);
-        const wingGeo = new ExtrudeGeometry(wingShape); //new ConeGeometry(0.4, 2, 4, 2);
-        const wingMat = new MeshPhongMaterial({color:"white"});
+        const wingGeo = new ConvexGeometry(wPoints); //new ConeGeometry(0.4, 2, 4, 2);
+        const wingMat = new MeshPhongMaterial({color:"yellow"});
         const lWingMesh = new Mesh(wingGeo, wingMat);
         const rWingMesh = new Mesh(wingGeo, wingMat);
 
@@ -35,7 +51,8 @@ class Spaceship extends Object3D{
             points.push(new Vector2((Math.sin(i * 0.15) + 1) * 0.3, i * 0.05));
         }
         const boostGeo = new LatheGeometry(points);
-        const boostMesh = new Mesh(boostGeo, bodyMat);
+        const boostMat = new MeshPhongMaterial({color:"yellow", side:DoubleSide})
+        const boostMesh = new Mesh(boostGeo, boostMat);
         boostMesh.position.set(0, 0, -(dims[2]/2));
         boostMesh.rotation.set(-1.57, 0, 0);
 

@@ -57,7 +57,7 @@ class World{
     }
 
     setSpaceshipRot(value){
-        spaceship.SetRotation(new Vector3(0, value, 0));
+        spaceship.SetRotation(new Vector3(spaceship.rotation.x, value, spaceship.rotation.z));
     }
 
     render(){
