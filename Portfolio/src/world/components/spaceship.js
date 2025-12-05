@@ -7,11 +7,12 @@ class Spaceship extends Object3D{
         let rotation = this.rotation; 
         let position = this.position;
         this.velocity = new Vector3(0, 0, 0);
-        this.maxSpeed = 100;
+        this.maxSpeed = 60;
         this.maxBackSpeed = 10;
         this.acceleration = 10;
-        this.deceleration = 100;
+        this.deceleration = 8;
         this.rollAccel = 1;
+        this.drag = 0.01;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
@@ -83,8 +84,14 @@ class Spaceship extends Object3D{
 
     tick = (delta) => {
         const localVel = new Vector3(this.velocity.x, this.velocity.y, this.velocity.z);
-        const vel = this.localToWorld(localVel).sub(this.position).multiplyScalar(delta);
-        this.position.add(vel);
+        const tempVel = new Vector3(localVel.x, localVel.y, localVel.z);
+        const tempVelSqr = new Vector3(tempVel.x, tempVel.y, tempVel.z).length();
+        const dragVel = tempVel.normalize().negate().multiplyScalar((tempVelSqr * this.drag) / 2);
+        this.velocity.add(dragVel);
+        const vel = new Vector3(0, 0, 0).add(localVel).add(dragVel);
+        const velo = this.localToWorld(vel).sub(this.position).multiplyScalar(delta);
+        this.position.add(velo);
+        console.log(dragVel, localVel);
     }
 }
 
