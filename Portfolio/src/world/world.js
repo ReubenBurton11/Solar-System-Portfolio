@@ -32,7 +32,8 @@ class World{
         });
 
         spaceship = new Spaceship({
-            
+            cam: camera,
+            camOffset: new Vector3(0, 0, 10)
         });
 
         let controls = new Controls(spaceship);

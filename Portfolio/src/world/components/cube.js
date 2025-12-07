@@ -14,8 +14,8 @@ export default function createCube(props){
     cube.rotation.set(...rot);
 
     cube.tick = (delta) => {
-        cube.rotation.x += delta;
-        cube.rotation.y += delta;
+        // cube.rotation.x += delta;
+        // cube.rotation.y += delta;
     };
 
     return cube;

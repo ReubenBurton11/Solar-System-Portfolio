@@ -13,7 +13,15 @@ class Spaceship extends Object3D{
         this.acceleration = 10;
         this.deceleration = 8;
         this.rollAccel = 1;
+        this.orbitSpeed = 1;
         this.drag = 0.01;
+        this.mouseSens = 0.01;
+        this.camera = props.cam;
+        this.camBoom = new Object3D();
+        this.camBoom.rotation.y = Math.PI;
+        this.camera.position.set(props.camOffset.x, props.camOffset.y, props.camOffset.z);
+        this.camBoom.add(this.camera);
+        this.add(this.camBoom);
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
@@ -99,7 +107,25 @@ class Spaceship extends Object3D{
         this.velocity.clampLength(0, this.velocity.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
+    CamBoomSetPosition(value){
+        this.camBoom.position.set(value.x, value.y, value.z);
+    }
+
+    CamBoomSetRotation(value){
+        this.camBoom.rotation.setFromVector3(value);
+    }
+
+    CamBoomAddRotation(value){
+        const rot = new Vector3(this.camBoom.rotation.x, this.camBoom.rotation.y, this.camBoom.rotation.z);
+        rot.add(value);
+        this.camBoom.rotation.setFromVector3(rot);
+    }
+
     tick = (delta) => {
+
+
+
+        //Velocity Calculations
         const localVel = new Vector3(this.velocity.x, this.velocity.y, this.velocity.z);
         const tempVel = new Vector3(localVel.x, localVel.y, localVel.z);
         const tempVelSqr = new Vector3(tempVel.x, tempVel.y, tempVel.z).length();
@@ -108,7 +134,6 @@ class Spaceship extends Object3D{
         const vel = new Vector3(0, 0, 0).add(localVel).add(dragVel);
         const velo = this.localToWorld(vel).sub(this.position).multiplyScalar(delta);
         this.position.add(velo);
-        console.log(dragVel, localVel);
     }
 }
 
