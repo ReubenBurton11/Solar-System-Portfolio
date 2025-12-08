@@ -1,6 +1,6 @@
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
 import { Spaceship } from "./spaceship";
-import { Vector3, Vector2 } from "three";
+import { Vector3, Vector2, Euler } from "three";
 
 class Key{
     constructor(value){
@@ -85,7 +85,7 @@ class Controls{
             this.spaceship.AddVelocity(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.acceleration * delta));
         }
         if (this.keys[1].bIsPressed){
-            this.spaceship.AddRotation(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta));
+            this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta)));
         }
         if (this.keys[2].bIsPressed){
             if (this.spaceship.velocity.z > 0){
@@ -96,11 +96,11 @@ class Controls{
             }
         }
         if (this.keys[3].bIsPressed){
-            this.spaceship.AddRotation(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta));
+            this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta)));
         }
 
         //this.spaceship.CamBoomAddRotation(new Vector3(-this.mouse.deltaMovement.y, this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta))
-        this.spaceship.AddRotation(new Vector3(-this.mouse.deltaMovement.y, -this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta));
+        this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(this.mouse.deltaMovement.y, -this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta)));
         //Track mouse movement
         //console.log(this.mouse.deltaMovement);
     }

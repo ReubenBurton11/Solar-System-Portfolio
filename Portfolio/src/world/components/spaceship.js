@@ -88,13 +88,10 @@ class Spaceship extends Object3D{
     }
 
     AddRotation(value){
-        const vec = new Vector3(this.rotation.x, this.rotation.y, this.rotation.z);
-        const val = new Vector3(0, 0, 0).add(this.rightVector.multiplyScalar(value.x)) 
-            .add(this.upVector.multiplyScalar(value.y)) 
-            .add(this.forwardVector.multiplyScalar(value.z));
-            console.log(val);
-        vec.add(val);
-        this.rotation.setFromVector3(vec);
+        const quat = new Quaternion().setFromEuler(this.rotation);
+        const valQuat = new Quaternion().setFromEuler(value);
+        const newQuat = quat.multiply(valQuat);
+        this.rotation.setFromQuaternion(newQuat);
     }
 
     SetPosition(value){
@@ -128,7 +125,7 @@ class Spaceship extends Object3D{
     tick = (delta) => {
         //Update Properties
         this.rightVector = this.localToWorld(new Vector3(1, 0, 0)).normalize();
-        this.upVector = this.localToWorld(new Vector3(0, 0, 1)).normalize();
+        this.upVector = this.localToWorld(new Vector3(0, 1, 0)).normalize();
         this.forwardVector = this.localToWorld(new Vector3(0, 0, 1)).normalize();
 
 
