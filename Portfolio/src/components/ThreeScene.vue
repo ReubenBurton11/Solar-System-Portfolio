@@ -38,6 +38,10 @@ onMounted(() => {
     document.getElementById("input").addEventListener('input', (e) => {
         updateSpaceshipRot(e.target.value);
     })
+
+    sceneCanvas.addEventListener('click', async() => {
+        await sceneCanvas.requestPointerLock({ unadjustedMovement:true });
+    })
 })
 </script>
 

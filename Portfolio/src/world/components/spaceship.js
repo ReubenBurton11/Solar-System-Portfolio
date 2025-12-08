@@ -1,4 +1,4 @@
-import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, LatheGeometry, DoubleSide, ExtrudeGeometry, Material} from "three"
+import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, Euler, LatheGeometry, DoubleSide, ExtrudeGeometry, Material, Quaternion} from "three"
 import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js'
 
 class Spaceship extends Object3D{
@@ -15,7 +15,7 @@ class Spaceship extends Object3D{
         this.rollAccel = 1;
         this.orbitSpeed = 1;
         this.drag = 0.01;
-        this.mouseSens = 0.01;
+        this.mouseSens = 0.1;
         this.camera = props.cam;
         this.camBoom = new Object3D();
         this.camBoom.rotation.y = Math.PI;
@@ -64,9 +64,9 @@ class Spaceship extends Object3D{
         boostMesh.position.set(0, 0, -(dims[2]/2));
         boostMesh.rotation.set(-1.57, 0, 0);
 
-        this.forwardVector = this.localToWorld(new Vector3(0, 0, 1));
-        this.rightVector = this.localToWorld(new Vector3(1, 0, 0));
-        this.upVector = this.localToWorld(new Vector3(0, 1, 0));
+        this.rightVector = new Vector3();
+        this.upVector = new Vector3();
+        this.forwardVector = new Vector3();
 
         lWingMesh.position.set(-1, 0, 0);
         lWingMesh.rotation.set(0, 0, 1.57);
@@ -89,7 +89,11 @@ class Spaceship extends Object3D{
 
     AddRotation(value){
         const vec = new Vector3(this.rotation.x, this.rotation.y, this.rotation.z);
-        vec.add(value);
+        const val = new Vector3(0, 0, 0).add(this.rightVector.multiplyScalar(value.x)) 
+            .add(this.upVector.multiplyScalar(value.y)) 
+            .add(this.forwardVector.multiplyScalar(value.z));
+            console.log(val);
+        vec.add(val);
         this.rotation.setFromVector3(vec);
     }
 
@@ -122,7 +126,10 @@ class Spaceship extends Object3D{
     }
 
     tick = (delta) => {
-
+        //Update Properties
+        this.rightVector = this.localToWorld(new Vector3(1, 0, 0)).normalize();
+        this.upVector = this.localToWorld(new Vector3(0, 0, 1)).normalize();
+        this.forwardVector = this.localToWorld(new Vector3(0, 0, 1)).normalize();
 
 
         //Velocity Calculations
@@ -134,6 +141,9 @@ class Spaceship extends Object3D{
         const vel = new Vector3(0, 0, 0).add(localVel).add(dragVel);
         const velo = this.localToWorld(vel).sub(this.position).multiplyScalar(delta);
         this.position.add(velo);
+
+        //Rotation Calculations
+        
     }
 }
 

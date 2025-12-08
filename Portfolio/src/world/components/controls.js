@@ -1,6 +1,6 @@
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
 import { Spaceship } from "./spaceship";
-import { Vector3 } from "three";
+import { Vector3, Vector2 } from "three";
 
 class Key{
     constructor(value){
@@ -13,11 +13,24 @@ class Mouse{
     constructor(){
         this.x = 0;
         this.y = 0;
+        this.deltaMovement = new Vector2(0, 0);
+        this.movementX = 0;
+        this.movementY = 0;
+
+        this.previousScreenPos = new Vector2(0, 0);
+        this.currentScreenPos = new Vector2(0, 0);
+
+        this.bIsMoving = false;
     }
 
     SetMousePos(x, y){
         this.x = x;
         this.y = y;
+    }
+
+    SetIsMovingFalse(){
+        this.bIsMoving = false;
+        this.deltaMovement = new Vector2(0, 0);
     }
 }
 
@@ -57,10 +70,13 @@ class Controls{
 
 
         //Mouse
+        let mouseIsMovingTimeout; 
+
         document.addEventListener('mousemove', function(e){
-            const x = e.clientX - window.innerWidth / 2;
-            const y = e.clientY - window.innerHeight / 2;
-            mouse.SetMousePos(x, y);
+            clearTimeout(mouseIsMovingTimeout);
+            mouse.bIsMoving = true;
+            mouse.deltaMovement.set(e.movementX, e.movementY);
+            mouseIsMovingTimeout = setTimeout(mouse.SetIsMovingFalse, 50);
         })
     }
 
@@ -83,7 +99,10 @@ class Controls{
             this.spaceship.AddRotation(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta));
         }
 
-        this.spaceship.CamBoomAddRotation(new Vector3(-this.mouse.y, this.mouse.x, 0).multiplyScalar(this.spaceship.mouseSens * delta))
+        //this.spaceship.CamBoomAddRotation(new Vector3(-this.mouse.deltaMovement.y, this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta))
+        this.spaceship.AddRotation(new Vector3(-this.mouse.deltaMovement.y, -this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta));
+        //Track mouse movement
+        //console.log(this.mouse.deltaMovement);
     }
 }
 
