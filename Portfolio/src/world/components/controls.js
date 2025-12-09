@@ -2,6 +2,9 @@ import {OrbitControls} from "three/examples/jsm/controls/OrbitControls.js"
 import { Spaceship } from "./spaceship";
 import { Vector3, Vector2, Euler } from "three";
 
+let controls;
+let mouse;
+
 class Key{
     constructor(value){
         this.value = value;
@@ -30,12 +33,20 @@ class Mouse{
 
     SetIsMovingFalse(){
         this.bIsMoving = false;
-        this.deltaMovement = new Vector2(0, 0);
+        this.SetMouseMovement(0, 0);
+    }
+
+    SetMouseMovement(x, y){
+        const vector = new Vector2(x, y);
+        if (this.deltaMovement != vector){
+        this.deltaMovement.set(vector.x, vector.y);
+        }
     }
 }
 
 class Controls{
     constructor(spaceship){
+        controls = this;
         if (!spaceship)
         {
             console.error("controls: setupControls: no spaceship given");
@@ -44,7 +55,7 @@ class Controls{
         let keys = [new Key('w'), new Key('a'), new Key('s'), new Key('d')];
         this.keys = keys;
 
-        let mouse = new Mouse();
+        mouse = new Mouse();
         this.mouse = mouse;
 
         this.spaceship = spaceship;
@@ -75,8 +86,8 @@ class Controls{
         document.addEventListener('mousemove', function(e){
             clearTimeout(mouseIsMovingTimeout);
             mouse.bIsMoving = true;
-            mouse.deltaMovement.set(e.movementX, e.movementY);
-            mouseIsMovingTimeout = setTimeout(mouse.SetIsMovingFalse, 50);
+            mouse.SetMouseMovement(e.movementX, e.movementY);
+            mouseIsMovingTimeout = setTimeout(controls.SetMouseMovingFalse, 50);
         })
     }
 
@@ -102,7 +113,14 @@ class Controls{
         //this.spaceship.CamBoomAddRotation(new Vector3(-this.mouse.deltaMovement.y, this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta))
         this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(this.mouse.deltaMovement.y, -this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta)));
         //Track mouse movement
-        //console.log(this.mouse.deltaMovement);
+        if (!this.mouse.bIsMoving){
+            this.mouse.SetMouseMovement(0, 0);
+        }
+        
+    }
+
+    SetMouseMovingFalse(){
+        mouse.SetIsMovingFalse();
     }
 }
 
