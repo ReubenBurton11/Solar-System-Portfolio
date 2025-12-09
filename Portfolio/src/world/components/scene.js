@@ -1,9 +1,9 @@
 import { Scene, Color } from "three";
 
-function createScene(color){
+function createScene(bg){
     const scene = new Scene();
 
-    scene.background = new Color(color);
+    scene.background = bg;
 
     return scene;
 }

@@ -1,11 +1,11 @@
 import { PerspectiveCamera } from "three";
 
-function createCamera(FOV, aspect, near, far){
+function createCamera(props){
     const camera = new PerspectiveCamera(
-        FOV, //FOV
-        aspect, //aspect ratio
-        near, //clipping plane: near
-        far //far
+        props.FOV, //FOV
+        props.aspect, //aspect ratio
+        props.near, //clipping plane: near
+        props.far //far
     )
 
     camera.position.set(0, 0, 10);

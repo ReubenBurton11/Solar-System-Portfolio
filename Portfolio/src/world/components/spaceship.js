@@ -20,6 +20,7 @@ class Spaceship extends Object3D{
         this.camBoom = new Object3D();
         this.camBoom.rotation.y = Math.PI;
         this.camera.position.set(props.camOffset.x, props.camOffset.y, props.camOffset.z);
+        this.camera.rotation.setFromVector3(props.camRotation);
         this.camBoom.add(this.camera);
         this.add(this.camBoom);
 

@@ -6,8 +6,15 @@ import { createLights } from "./components/lights.js";
 import { createCamera } from "./components/camera.js";
 import createCube from "./components/cube.js";
 import { Spaceship } from "./components/spaceship.js";
-import { Vector3 } from "three";
+import { Vector3, CubeTextureLoader, Euler} from "three";
 import { Controls } from "./components/controls.js";
+import SBRight from "../assets/cubemap/right.png";
+import SBLeft from "../assets/cubemap/left.png";
+import SBTop from "../assets/cubemap/top.png";
+import SBBottom from "../assets/cubemap/bottom.png";
+import SBBack from "../assets/cubemap/back.png";
+import SBFront from "../assets/cubemap/front.png";
+
 
 let camera;
 let renderer;
@@ -18,13 +25,25 @@ let spaceship;
 class World{
     constructor(container){
         renderer = createRenderer(container);
-        camera = createCamera();
-        scene = createScene("lightBlue");
+        camera = createCamera({
+            near: 3
+        });
+
+        //Skybox setup
+        const cubemapLoader = new CubeTextureLoader();
+        const skyboxTex = cubemapLoader.load([
+            SBRight, SBLeft, SBTop, SBBottom, SBFront, SBBack,
+        ]);
+        scene = createScene(skyboxTex);
+
+
 
         loop = new Loop(camera, scene, renderer);
 
-        const {light, lightHelper} = createLights({
-            
+        const {light, lightHelper, ambientLight} = createLights({
+            ambientIntensity: 0.05,
+            renderer: renderer,
+            environmentMap: scene.background,
         });
 
         let cube = createCube({
@@ -33,7 +52,8 @@ class World{
 
         spaceship = new Spaceship({
             cam: camera,
-            camOffset: new Vector3(0, 0, 10)
+            camOffset: new Vector3(0, 2, 10),
+            camRotation: new Vector3(-(Math.PI / 20), 0, 0)
         });
 
         let controls = new Controls(spaceship);
@@ -46,6 +66,7 @@ class World{
         );
         
         scene.add(
+            ambientLight,
             light, 
             cube, 
             spaceship
@@ -55,10 +76,6 @@ class World{
         resizer.onResize = () => {
             this.render();
         };
-    }
-
-    setSpaceshipRot(value){
-        spaceship.SetRotation(new Vector3(spaceship.rotation.x, value, spaceship.rotation.z));
     }
 
     render(){

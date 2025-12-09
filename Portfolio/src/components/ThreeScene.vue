@@ -1,7 +1,6 @@
 <template>
     <div v-if="bHasWebGL" id="sceneDiv">
         <canvas id="sceneCanvas"></canvas>
-        <input id="input" value="0" type="range" min="-3.14" max="3.14" step="0.01">rot</input>
     </div>
     <div v-else>Your browser sucks: it can't use webGL2</div>
 </template>
@@ -35,10 +34,6 @@ onMounted(() => {
     sceneCanvas = document.getElementById("sceneCanvas");
     startScene(sceneCanvas);
 
-    document.getElementById("input").addEventListener('input', (e) => {
-        updateSpaceshipRot(e.target.value);
-    })
-
     sceneCanvas.addEventListener('click', async() => {
         await sceneCanvas.requestPointerLock({ unadjustedMovement:true });
     })
@@ -55,11 +50,5 @@ onMounted(() => {
 #sceneDiv{
     width:100%;
     height: 100%;
-}
-#input{
-    display: block;
-    position: fixed;
-    left:0;
-    top:0;
 }
 </style>
