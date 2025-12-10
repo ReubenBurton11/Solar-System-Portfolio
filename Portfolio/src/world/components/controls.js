@@ -5,10 +5,36 @@ import { Vector3, Vector2, Euler } from "three";
 let controls;
 let mouse;
 
-class Key{
+class Key extends EventTarget{
     constructor(value){
+        super();
+
         this.value = value;
         this.bIsPressed = false;
+
+        this.keyDown = new CustomEvent("keyDown", {
+            detail:{
+                type: "down",
+                key: value
+            }
+        });
+
+        this.keyUp = new CustomEvent("keyUp", {
+            detail:{
+                type: "up",
+                key: value
+            }
+        });
+    }
+
+    KeyDown(){
+        this.bIsPressed = true;
+        this.dispatchEvent(this.keyDown);
+    }
+
+    KeyUp(){
+        this.bIsPressed = false;
+        this.dispatchEvent(this.keyUp);
     }
 }
 
@@ -52,7 +78,11 @@ class Controls{
             console.error("controls: setupControls: no spaceship given");
         }
 
-        let keys = [new Key('w'), new Key('a'), new Key('s'), new Key('d')];
+        const keys = new Map();
+        keys.set('w', new Key('w'));
+        keys.set('a', new Key('a'));
+        keys.set('s', new Key('s'));
+        keys.set('d', new Key('d'));
         this.keys = keys;
 
         mouse = new Mouse();
@@ -60,24 +90,38 @@ class Controls{
 
         this.spaceship = spaceship;
 
+        const KeyHandler = (e) => {
+            console.log(e.detail.key, e.detail.type);
+        }
+
         //Keys
+        //Generic key listeners
         document.addEventListener('keydown', function(e){
-            const key = e.key;
-            for(let i = 0; i < keys.length; i++){
-                if (key == keys[i].value && !keys[i].bIsPressed){
-                    keys[i].bIsPressed = true;
-                }
+            const key = keys.get(e.key);
+            if (!key.bIsPressed){
+                key.KeyDown();
             }
-        })
+        });
 
         document.addEventListener('keyup', function(e){
-            const key = e.key;
-            for(let i = 0; i < keys.length; i++){
-                if (key == keys[i].value && keys[i].bIsPressed){
-                    keys[i].bIsPressed = false;
-                }
+            const key = keys.get(e.key);
+            if (key.bIsPressed){
+                key.KeyUp();
             }
-        })
+        });
+
+        //Specific key listeners
+        keys.get('w').addEventListener('keyDown', KeyHandler);
+        keys.get('w').addEventListener('keyUp', KeyHandler);
+
+        keys.get('a').addEventListener('keyDown', KeyHandler);
+        keys.get('a').addEventListener('keyUp', KeyHandler);
+
+        keys.get('s').addEventListener('keyDown', KeyHandler);
+        keys.get('s').addEventListener('keyUp', KeyHandler);
+
+        keys.get('d').addEventListener('keyDown', KeyHandler);
+        keys.get('d').addEventListener('keyUp', KeyHandler);
 
 
         //Mouse
@@ -91,22 +135,21 @@ class Controls{
         })
     }
 
+    SetMouseMovingFalse(){
+        mouse.SetIsMovingFalse();
+    }
+
     tick = (delta) => {
-        if (this.keys[0].bIsPressed){
-            this.spaceship.AddVelocity(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.acceleration * delta));
+        if (this.keys.get('w').bIsPressed){
+            this.spaceship.AddThrust(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.forwardThrustForce * delta));
         }
-        if (this.keys[1].bIsPressed){
+        if (this.keys.get('a').bIsPressed){
             this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta)));
         }
-        if (this.keys[2].bIsPressed){
-            if (this.spaceship.velocity.z > 0){
-            this.spaceship.AddVelocity(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.deceleration * delta));
-            }
-            else{
-                this.spaceship.AddVelocity(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.acceleration * delta));
-            }
+        if (this.keys.get('s').bIsPressed){
+            this.spaceship.AddThrust(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.backwardThrustForce * delta));
         }
-        if (this.keys[3].bIsPressed){
+        if (this.keys.get('d').bIsPressed){
             this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta)));
         }
 
@@ -117,10 +160,6 @@ class Controls{
             this.mouse.SetMouseMovement(0, 0);
         }
         
-    }
-
-    SetMouseMovingFalse(){
-        mouse.SetIsMovingFalse();
     }
 }
 

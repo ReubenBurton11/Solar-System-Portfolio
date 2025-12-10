@@ -7,11 +7,12 @@ class Spaceship extends Object3D{
 
         let rotation = this.rotation; 
         let position = this.position;
-        this.velocity = new Vector3(0, 0, 0);
-        this.maxSpeed = 60;
-        this.maxBackSpeed = 10;
-        this.acceleration = 10;
-        this.deceleration = 8;
+        this.thrust = new Vector3(0, 0, 0);
+        this.globalVelocity = new Vector3(0, 0, 0);
+        this.maxSpeed = 6;
+        this.maxBackSpeed = 1;
+        this.forwardThrustForce = 6;
+        this.backwardThrustForce = 6;
         this.rollAccel = 1;
         this.orbitSpeed = 1;
         this.drag = 0.01;
@@ -100,13 +101,13 @@ class Spaceship extends Object3D{
     }
 
     SetVelocity(value){
-        this.velocity.set(value.x, value.y, value.z);
-        this.velocity.clampLength(0, this.velocity.z > 0 ? this.maxSpeed : this.maxBackSpeed);
+        this.thrust.set(value.x, value.y, value.z);
+        this.thrust.clampLength(0, this.thrust.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
-    AddVelocity(value){
-        this.velocity.add(value);
-        this.velocity.clampLength(0, this.velocity.z > 0 ? this.maxSpeed : this.maxBackSpeed);
+    AddThrust(value){
+        this.thrust.set(value.x, value.y, value.z);
+        this.thrust.clampLength(0, this.thrust.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
     CamBoomSetPosition(value){
@@ -131,14 +132,21 @@ class Spaceship extends Object3D{
 
 
         //Velocity Calculations
-        const localVel = new Vector3(this.velocity.x, this.velocity.y, this.velocity.z);
-        const tempVel = new Vector3(localVel.x, localVel.y, localVel.z);
-        const tempVelSqr = new Vector3(tempVel.x, tempVel.y, tempVel.z).length();
-        const dragVel = tempVel.normalize().negate().multiplyScalar((tempVelSqr * this.drag) / 2);
-        this.velocity.add(dragVel);
-        const vel = new Vector3(0, 0, 0).add(localVel).add(dragVel);
-        const velo = this.localToWorld(vel).sub(this.position).multiplyScalar(delta);
-        this.position.add(velo);
+        // const localVel = new Vector3(this.thrust.x, this.thrust.y, this.thrust.z);
+        // const tempVel = new Vector3(localVel.x, localVel.y, localVel.z);
+        // const tempVelSqr = new Vector3(tempVel.x, tempVel.y, tempVel.z).length();
+        // const dragVel = tempVel.normalize().negate().multiplyScalar((tempVelSqr * this.drag) / 2);
+        // this.thrust.add(dragVel);
+        // const vel = new Vector3(0, 0, 0).add(localVel).add(dragVel);
+        // this.globalVelocity.add(this.localToWorld(vel).sub(this.position).multiplyScalar(delta));
+        // this.position.add(this.globalVelocity);
+
+        const thrustVel = new Vector3(0, 0, 0).add(this.thrust);
+        this.globalVelocity.add((this.localToWorld(thrustVel).sub(this.position)).multiplyScalar(delta));
+        const forward = this.forwardVector.add(this.position);
+        this.globalVelocity.clampLength(0, Math.acos(this.globalVelocity.dot(forward) / (this.globalVelocity.length() * forward.length())) < Math.PI / 2 ? this.maxSpeed : this.maxBackSpeed);
+        //console.log(Math.acos(this.globalVelocity.dot(forward) / (this.globalVelocity.length() * forward.length())) < Math.PI / 2 ? "forward" : "back");
+        this.position.add(this.globalVelocity);
 
         //Rotation Calculations
         

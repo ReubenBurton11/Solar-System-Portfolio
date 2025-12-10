@@ -26,7 +26,8 @@ class World{
     constructor(container){
         renderer = createRenderer(container);
         camera = createCamera({
-            near: 3
+            near: 3,
+            far: 300
         });
 
         //Skybox setup
