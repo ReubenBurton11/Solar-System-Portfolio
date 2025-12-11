@@ -9,11 +9,14 @@ class Spaceship extends Object3D{
         let position = this.position;
         this.thrust = new Vector3(0, 0, 0);
         this.globalVelocity = new Vector3(0, 0, 0);
-        this.maxSpeed = 6;
-        this.maxBackSpeed = 1;
-        this.forwardThrustForce = 6;
-        this.backwardThrustForce = 6;
-        this.rollAccel = 1;
+        this.maxSpeed = 0.6;
+        this.maxBackSpeed = 0.6;
+        this.forwardThrustForce = 0.3;
+        this.backwardThrustForce = 0.3;
+        this.rollAccel = 0.1;
+        this.maxRollSpeed = 1;
+        this.roll = new Vector3(0, 0, 0);
+        this.rotateVelocity = new Vector3(0, 0, 0);
         this.orbitSpeed = 1;
         this.drag = 0.01;
         this.mouseSens = 0.1;
@@ -110,6 +113,42 @@ class Spaceship extends Object3D{
         this.thrust.clampLength(0, this.thrust.z > 0 ? this.maxSpeed : this.maxBackSpeed);
     }
 
+    ForwardThrust(isActivating){
+        if (isActivating){
+            this.thrust.set(0, 0, this.forwardThrustForce);
+        }
+        else{
+            this.thrust.set(0, 0, 0);
+        }
+    }
+
+    BackwardThrust(isActivating){
+        if (isActivating){
+            this.thrust.set(0, 0, -this.backwardThrustForce);
+        }
+        else{
+            this.thrust.set(0, 0, 0);
+        }
+    }
+
+    RightRoll(isActivating){
+        if (isActivating){
+            this.roll.set(0, 0, 1).multiplyScalar(this.rollAccel);
+        }
+        else{
+            this.roll.set(0, 0, 0);
+        }
+    }
+
+    LeftRoll(isActivating){
+        if (isActivating){
+            this.roll.set(0, 0, -1).multiplyScalar(this.rollAccel);
+        }
+        else{
+            this.roll.set(0, 0, 0);
+        }
+    }
+
     CamBoomSetPosition(value){
         this.camBoom.position.set(value.x, value.y, value.z);
     }
@@ -149,7 +188,10 @@ class Spaceship extends Object3D{
         this.position.add(this.globalVelocity);
 
         //Rotation Calculations
-        
+        const roll = new Vector3(0, 0, 0).add(this.roll);
+        this.rotateVelocity.add(roll.multiplyScalar(delta));
+        this.rotateVelocity.clampLength(0, this.maxRollSpeed);
+        this.AddRotation(new Euler().setFromVector3(this.rotateVelocity));      
     }
 }
 

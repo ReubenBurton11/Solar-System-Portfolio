@@ -98,6 +98,9 @@ class Controls{
         //Generic key listeners
         document.addEventListener('keydown', function(e){
             const key = keys.get(e.key);
+            if (!key){
+                return;
+            }
             if (!key.bIsPressed){
                 key.KeyDown();
             }
@@ -105,23 +108,26 @@ class Controls{
 
         document.addEventListener('keyup', function(e){
             const key = keys.get(e.key);
+            if (!key){
+                return;
+            }
             if (key.bIsPressed){
                 key.KeyUp();
             }
         });
 
         //Specific key listeners
-        keys.get('w').addEventListener('keyDown', KeyHandler);
-        keys.get('w').addEventListener('keyUp', KeyHandler);
+        keys.get('w').addEventListener('keyDown', () => {spaceship.ForwardThrust(true)});
+        keys.get('w').addEventListener('keyUp', () => {spaceship.ForwardThrust(false)});
 
-        keys.get('a').addEventListener('keyDown', KeyHandler);
-        keys.get('a').addEventListener('keyUp', KeyHandler);
+        keys.get('a').addEventListener('keyDown', () => {spaceship.LeftRoll(true)});
+        keys.get('a').addEventListener('keyUp', () => {spaceship.LeftRoll(false)});
 
-        keys.get('s').addEventListener('keyDown', KeyHandler);
-        keys.get('s').addEventListener('keyUp', KeyHandler);
+        keys.get('s').addEventListener('keyDown', () => {spaceship.BackwardThrust(true)});
+        keys.get('s').addEventListener('keyUp', () => {spaceship.BackwardThrust(false)});
 
-        keys.get('d').addEventListener('keyDown', KeyHandler);
-        keys.get('d').addEventListener('keyUp', KeyHandler);
+        keys.get('d').addEventListener('keyDown', () => {spaceship.RightRoll(true)});
+        keys.get('d').addEventListener('keyUp', () => {spaceship.RightRoll(false)});
 
 
         //Mouse
@@ -140,19 +146,6 @@ class Controls{
     }
 
     tick = (delta) => {
-        if (this.keys.get('w').bIsPressed){
-            this.spaceship.AddThrust(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.forwardThrustForce * delta));
-        }
-        if (this.keys.get('a').bIsPressed){
-            this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.rollAccel * delta)));
-        }
-        if (this.keys.get('s').bIsPressed){
-            this.spaceship.AddThrust(new Vector3(0, 0, -1).multiplyScalar(this.spaceship.backwardThrustForce * delta));
-        }
-        if (this.keys.get('d').bIsPressed){
-            this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(0, 0, 1).multiplyScalar(this.spaceship.rollAccel * delta)));
-        }
-
         //this.spaceship.CamBoomAddRotation(new Vector3(-this.mouse.deltaMovement.y, this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta))
         this.spaceship.AddRotation(new Euler().setFromVector3(new Vector3(this.mouse.deltaMovement.y, -this.mouse.deltaMovement.x, 0).multiplyScalar(this.spaceship.mouseSens * delta)));
         //Track mouse movement
