@@ -7,16 +7,19 @@ class Spaceship extends Object3D{
 
         let rotation = this.rotation; 
         let position = this.position;
+
+        this.useDrag = true;
+
         this.thrust = new Vector3(0, 0, 0);
         this.globalVelocity = new Vector3(0, 0, 0);
         this.maxSpeed = 0.6;
-        this.maxBackSpeed = 0.6;
         this.forwardThrustForce = 0.3;
         this.backwardThrustForce = 0.3;
-        this.rollAccel = 0.1;
-        this.maxRollSpeed = 1;
+        this.rollAccel = 0.02;
+        this.maxRollSpeed = 0.02;
         this.roll = new Vector3(0, 0, 0);
         this.rotateVelocity = new Vector3(0, 0, 0);
+        this.rollDrag = 0.01;
         this.orbitSpeed = 1;
         this.drag = 0.01;
         this.mouseSens = 0.1;
@@ -103,16 +106,6 @@ class Spaceship extends Object3D{
         this.position.setFromVector3(value);
     }
 
-    SetVelocity(value){
-        this.thrust.set(value.x, value.y, value.z);
-        this.thrust.clampLength(0, this.thrust.z > 0 ? this.maxSpeed : this.maxBackSpeed);
-    }
-
-    AddThrust(value){
-        this.thrust.set(value.x, value.y, value.z);
-        this.thrust.clampLength(0, this.thrust.z > 0 ? this.maxSpeed : this.maxBackSpeed);
-    }
-
     ForwardThrust(isActivating){
         if (isActivating){
             this.thrust.set(0, 0, this.forwardThrustForce);
@@ -182,14 +175,24 @@ class Spaceship extends Object3D{
 
         const thrustVel = new Vector3(0, 0, 0).add(this.thrust);
         this.globalVelocity.add((this.localToWorld(thrustVel).sub(this.position)).multiplyScalar(delta));
-        const forward = this.forwardVector.add(this.position);
-        this.globalVelocity.clampLength(0, Math.acos(this.globalVelocity.dot(forward) / (this.globalVelocity.length() * forward.length())) < Math.PI / 2 ? this.maxSpeed : this.maxBackSpeed);
-        //console.log(Math.acos(this.globalVelocity.dot(forward) / (this.globalVelocity.length() * forward.length())) < Math.PI / 2 ? "forward" : "back");
+
+        if (this.useDrag){
+        const dragVel = (new Vector3().add(this.globalVelocity)).negate().multiplyScalar(this.drag);
+        this.globalVelocity.add(dragVel);
+        }
+        
+        this.globalVelocity.clampLength(0, this.maxSpeed);
         this.position.add(this.globalVelocity);
 
         //Rotation Calculations
         const roll = new Vector3(0, 0, 0).add(this.roll);
         this.rotateVelocity.add(roll.multiplyScalar(delta));
+
+        if (this.useDrag){
+            const dragRot = (new Vector3().add(this.rotateVelocity)).negate().multiplyScalar(this.rollDrag);
+            this.rotateVelocity.add(dragRot);
+        }
+
         this.rotateVelocity.clampLength(0, this.maxRollSpeed);
         this.AddRotation(new Euler().setFromVector3(this.rotateVelocity));      
     }

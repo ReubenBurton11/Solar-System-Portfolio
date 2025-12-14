@@ -118,16 +118,28 @@ class Controls{
 
         //Specific key listeners
         keys.get('w').addEventListener('keyDown', () => {spaceship.ForwardThrust(true)});
-        keys.get('w').addEventListener('keyUp', () => {spaceship.ForwardThrust(false)});
+        keys.get('w').addEventListener('keyUp', () => {
+            spaceship.ForwardThrust(false);
+            if(keys.get('s').bIsPressed)keys.get('s').KeyDown();
+        });
 
         keys.get('a').addEventListener('keyDown', () => {spaceship.LeftRoll(true)});
-        keys.get('a').addEventListener('keyUp', () => {spaceship.LeftRoll(false)});
+        keys.get('a').addEventListener('keyUp', () => {
+            spaceship.LeftRoll(false);
+            if(keys.get('d').bIsPressed)keys.get('d').KeyDown();
+        });
 
         keys.get('s').addEventListener('keyDown', () => {spaceship.BackwardThrust(true)});
-        keys.get('s').addEventListener('keyUp', () => {spaceship.BackwardThrust(false)});
+        keys.get('s').addEventListener('keyUp', () => {
+            spaceship.BackwardThrust(false);
+            if(keys.get('w').bIsPressed)keys.get('w').KeyDown();
+        });
 
         keys.get('d').addEventListener('keyDown', () => {spaceship.RightRoll(true)});
-        keys.get('d').addEventListener('keyUp', () => {spaceship.RightRoll(false)});
+        keys.get('d').addEventListener('keyUp', () => {
+            spaceship.RightRoll(false);
+            if(keys.get('a').bIsPressed)keys.get('a').KeyDown();
+        });
 
 
         //Mouse
