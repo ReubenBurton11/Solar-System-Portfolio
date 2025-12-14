@@ -8,6 +8,8 @@ import createCube from "./components/cube.js";
 import { Spaceship } from "./components/spaceship.js";
 import { Vector3, CubeTextureLoader, Euler} from "three";
 import { Controls } from "./components/controls.js";
+import { Planet } from "./components/planet.js";
+import { FloatingLetter } from "./components/floatingLetter.js";
 import SBRight from "../assets/cubemap/right.png";
 import SBLeft from "../assets/cubemap/left.png";
 import SBTop from "../assets/cubemap/top.png";
@@ -27,7 +29,7 @@ class World{
         renderer = createRenderer(container);
         camera = createCamera({
             near: 3,
-            far: 300
+            far: 3000
         });
 
         //Skybox setup
@@ -51,6 +53,19 @@ class World{
 
         });
 
+        let planet1 = new Planet({
+            radius: 100,
+            position: new Vector3(0, 30, -1000),
+        });
+
+        let myName = new FloatingLetter({
+            text: "Reuben Burton",
+            size: 20,
+            spacing: 1.15,
+            alignment: "centre",
+            position: new Vector3(0, -10, -150),
+        });
+
         spaceship = new Spaceship({
             cam: camera,
             camOffset: new Vector3(0, 2, 10),
@@ -70,6 +85,8 @@ class World{
             ambientLight,
             light, 
             cube, 
+            planet1,
+            myName,
             spaceship
         );
 
