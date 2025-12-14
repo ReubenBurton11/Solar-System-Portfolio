@@ -5,6 +5,7 @@ class Planet extends Object3D{
         super();
 
         this.name = props.name;
+        this.tag = "planet";
 
         const geo = new SphereGeometry(props.radius ? props.radius : 10);
         const mat = new MeshPhongMaterial({color: props.color ? props.color : "teal"});

@@ -67,7 +67,7 @@ class World{
             size: 20,
             spacing: 1.15,
             alignment: "centre",
-            color: ["red", "blue"],
+            color: ["#FFFFFF", "#D4D4D4", "#AAAAAA", "#7C7C7C", "#525252", "#7C7C7C", "#AAAAAA", "#D4D4D4"],
             position: new Vector3(0, -10, -150),
         });
 
