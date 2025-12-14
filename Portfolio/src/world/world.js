@@ -28,6 +28,7 @@ class World{
     constructor(container){
         renderer = createRenderer(container);
         camera = createCamera({
+            FOV: 45,
             near: 3,
             far: 3000
         });
