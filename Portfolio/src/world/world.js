@@ -10,6 +10,7 @@ import { Vector3, CubeTextureLoader, Euler} from "three";
 import { Controls } from "./components/controls.js";
 import { Planet } from "./components/planet.js";
 import { FloatingLetter } from "./components/floatingLetter.js";
+import { RaycastUtil } from "./components/raycastUtil.js";
 import SBRight from "../assets/cubemap/right.png";
 import SBLeft from "../assets/cubemap/left.png";
 import SBTop from "../assets/cubemap/top.png";
@@ -55,23 +56,30 @@ class World{
         });
 
         let planet1 = new Planet({
+            name: "That Big Ball In Da Sky",
             radius: 100,
             position: new Vector3(0, 30, -1000),
         });
 
         let myName = new FloatingLetter({
+            name: "Reuben Burton Text",
             text: "Reuben Burton",
             size: 20,
             spacing: 1.15,
             alignment: "centre",
+            color: ["red", "blue"],
             position: new Vector3(0, -10, -150),
         });
 
         spaceship = new Spaceship({
             cam: camera,
             camOffset: new Vector3(0, 2, 10),
-            camRotation: new Vector3(-(Math.PI / 20), 0, 0)
+            camRotation: new Vector3(-(Math.PI / 20), 0, 0),
+
+            planet: planet1,
         });
+
+        let raycastUtil = new RaycastUtil();
 
         let controls = new Controls(spaceship);
 
@@ -79,7 +87,7 @@ class World{
             light,
             cube, 
             spaceship,
-            controls
+            controls,
         );
         
         scene.add(
@@ -88,8 +96,18 @@ class World{
             cube, 
             planet1,
             myName,
-            spaceship
+            spaceship,
         );
+
+        raycastUtil.detectableObjects.push(
+            planet1,
+        );
+
+        for (let i = 0; i < myName.letters.length; i++){
+            raycastUtil.detectableObjects.push(myName.letters[i]);
+        }
+
+        spaceship.raycaster = raycastUtil;
 
         const resizer = new Resizer(camera, renderer);
         resizer.onResize = () => {

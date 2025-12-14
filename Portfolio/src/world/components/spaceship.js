@@ -1,4 +1,4 @@
-import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, Euler, LatheGeometry, DoubleSide, ExtrudeGeometry, Material, Quaternion} from "three"
+import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Vector3, Vector2, Euler, LatheGeometry, DoubleSide, ExtrudeGeometry, Material, Quaternion, Raycaster} from "three"
 import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js'
 
 class Spaceship extends Object3D{
@@ -30,6 +30,9 @@ class Spaceship extends Object3D{
         this.camera.rotation.setFromVector3(props.camRotation);
         this.camBoom.add(this.camera);
         this.add(this.camBoom);
+
+        this.raycaster;
+        this.visionDistance = 1000;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
@@ -195,6 +198,16 @@ class Spaceship extends Object3D{
 
         this.rotateVelocity.clampLength(0, this.maxRollSpeed);
         this.AddRotation(new Euler().setFromVector3(this.rotateVelocity));      
+
+        //Raycast checks
+        if (this.raycaster){
+            let hitPlanets = [];
+            this.raycaster.setFromCamera(new Vector2(0, 0), this.camera, {far: this.visionDistance});
+            this.raycaster.checkAll(hitPlanets);
+            if (hitPlanets.length > 0){
+                console.log(hitPlanets[0].object.parent.name);
+            }
+        }
     }
 }
 
