@@ -132,6 +132,7 @@ class Controls{
         keys.set('a', new Key('a'));
         keys.set('s', new Key('s'));
         keys.set('d', new Key('d'));
+        keys.set('shift', new Key('shift'));
         this.keys = keys;
 
         mouse = new Mouse();
@@ -150,7 +151,7 @@ class Controls{
         //Keys
         //Generic key listeners
         document.addEventListener('keydown', function(e){
-            const key = keys.get(e.key);
+            const key = keys.get(e.key.toLowerCase());
             if (!key){
                 return;
             }
@@ -160,7 +161,7 @@ class Controls{
         });
 
         document.addEventListener('keyup', function(e){
-            const key = keys.get(e.key);
+            const key = keys.get(e.key.toLowerCase());
             if (!key){
                 return;
             }
@@ -218,6 +219,12 @@ class Controls{
         keys.get('d').addEventListener('keyUp', () => {
             spaceship.RightRoll(false);
             if(keys.get('a').bIsPressed)keys.get('a').KeyDown();
+        });
+
+        keys.get('shift').addEventListener('keyDown', () => {spaceship.TurboBoost(true)});
+        keys.get('shift').addEventListener('keyUp', () => {
+            spaceship.TurboBoost(false);
+            if(keys.get('w').bIsPressed)keys.get('w').KeyDown();
         });
 
         mouse.addEventListener('mouseLeftDown', () => {spaceship.SelectPlanet()});

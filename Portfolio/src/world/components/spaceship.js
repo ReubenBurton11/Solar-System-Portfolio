@@ -13,8 +13,11 @@ class Spaceship extends Object3D{
         this.thrust = new Vector3(0, 0, 0);
         this.globalVelocity = new Vector3(0, 0, 0);
         this.maxSpeed = 0.6;
+        this.turboMaxSpeed = 1;
+        this.bIsTurboBoosting = false;
         this.forwardThrustForce = 0.3;
         this.backwardThrustForce = 0.3;
+        this.turboBoostForce = 5;
         this.rollAccel = 0.02;
         this.maxRollSpeed = 0.02;
         this.roll = new Vector3(0, 0, 0);
@@ -128,6 +131,17 @@ class Spaceship extends Object3D{
         }
     }
 
+    TurboBoost = (isActivating) => {
+        if (isActivating){
+            this.bIsTurboBoosting = true;
+            this.thrust.set(0, 0, this.turboBoostForce);
+        }
+        else{
+            this.bIsTurboBoosting = false;
+            this.thrust.set(0, 0, 0);
+        }
+    }
+
     RightRoll(isActivating){
         if (isActivating){
             this.roll.set(0, 0, 1).multiplyScalar(this.rollAccel);
@@ -194,7 +208,7 @@ class Spaceship extends Object3D{
         this.globalVelocity.add(dragVel);
         }
         
-        this.globalVelocity.clampLength(0, this.maxSpeed);
+        this.globalVelocity.clampLength(0, this.bIsTurboBoosting ? this.turboMaxSpeed : this.maxSpeed);
         this.position.add(this.globalVelocity);
 
         //Rotation Calculations
