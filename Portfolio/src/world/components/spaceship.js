@@ -33,6 +33,7 @@ class Spaceship extends Object3D{
 
         this.raycaster;
         this.visionDistance = 1000;
+        this.focusedPlanet = null;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 
         const bodyGeo = new BoxGeometry(...dims);
@@ -159,6 +160,15 @@ class Spaceship extends Object3D{
         this.camBoom.rotation.setFromVector3(rot);
     }
 
+    SelectPlanet = () => {
+        if (!this.focusedPlanet){
+            console.log("no planet");
+            return;
+        }
+
+        console.log(this.focusedPlanet.name)
+    }
+
     tick = (delta) => {
         //Update Properties
         this.rightVector = this.localToWorld(new Vector3(1, 0, 0)).normalize();
@@ -203,9 +213,14 @@ class Spaceship extends Object3D{
         if (this.raycaster){
             let hitPlanets = [];
             this.raycaster.setFromCamera(new Vector2(0, 0), this.camera, {far: this.visionDistance});
-            this.raycaster.checkAll(hitPlanets);
+            this.raycaster.checkAll(hitPlanets, {tag: "Planet"});
             if (hitPlanets.length > 0){
-                console.log(hitPlanets[0].object.parent.name);
+                if (this.focusedPlanet !== hitPlanets[0].object.parent){
+                this.focusedPlanet = hitPlanets[0].object.parent;
+                }
+            }
+            else{
+                this.focusedPlanet = null;
             }
         }
     }

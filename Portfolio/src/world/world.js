@@ -55,11 +55,25 @@ class World{
 
         });
 
-        let planet1 = new Planet({
-            name: "That Big Ball In Da Sky",
-            radius: 100,
-            position: new Vector3(0, 30, -1000),
-        });
+        let planets = [
+            new Planet({
+                name: "That Big Ball In Da Sky",
+                radius: 100,
+                position: new Vector3(0, 30, -1000),
+            }),
+            new Planet({
+                name: "Cheek No.1",
+                radius: 200,
+                position: new Vector3(400, 0, -600),
+                color: "#F0AE7F",
+            }),
+            new Planet({
+                name: "Cheek No.2",
+                radius: 188,
+                position: new Vector3(594, 0, -600),
+                color: "#F0AE7F",
+            })
+        ];
 
         let myName = new FloatingLetter({
             name: "Reuben Burton Text",
@@ -75,8 +89,6 @@ class World{
             cam: camera,
             camOffset: new Vector3(0, 2, 10),
             camRotation: new Vector3(-(Math.PI / 20), 0, 0),
-
-            planet: planet1,
         });
 
         let raycastUtil = new RaycastUtil();
@@ -94,18 +106,15 @@ class World{
             ambientLight,
             light, 
             cube, 
-            planet1,
+            ...planets,
             myName,
             spaceship,
         );
 
         raycastUtil.detectableObjects.push(
-            planet1,
+            ...planets,
+            myName,
         );
-
-        for (let i = 0; i < myName.letters.length; i++){
-            raycastUtil.detectableObjects.push(myName.letters[i]);
-        }
 
         spaceship.raycaster = raycastUtil;
 

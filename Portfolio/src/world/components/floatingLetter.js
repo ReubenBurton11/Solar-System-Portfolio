@@ -7,7 +7,7 @@ class Letter extends Object3D{
     constructor(char, font, size, depth, color){
         super();
 
-        this.name = char;
+        this.name = "Letter: " + char;
 
         const geo = new TextGeometry(char, {
                 font: font,

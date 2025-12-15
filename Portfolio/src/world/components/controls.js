@@ -38,8 +38,10 @@ class Key extends EventTarget{
     }
 }
 
-class Mouse{
+class Mouse extends EventTarget{
     constructor(){
+        super();
+
         this.x = 0;
         this.y = 0;
         this.deltaMovement = new Vector2(0, 0);
@@ -50,6 +52,33 @@ class Mouse{
         this.currentScreenPos = new Vector2(0, 0);
 
         this.bIsMoving = false;
+
+        this.bLeftIsPressed = false;
+        this.bRightIsPressed = false;
+
+        this.leftDown = new CustomEvent("mouseLeftDown", {
+            detail:{
+
+            }
+        });
+
+        this.leftUp = new CustomEvent("mouseLeftUp", {
+            detail:{
+
+            }
+        });
+
+        this.rightDown = new CustomEvent("mouseRightDown", {
+            detail:{
+
+            }
+        });
+
+        this.rightUp = new CustomEvent("mouseRightUp", {
+            detail:{
+
+            }
+        });
     }
 
     SetMousePos(x, y){
@@ -67,6 +96,26 @@ class Mouse{
         if (this.deltaMovement != vector){
         this.deltaMovement.set(vector.x, vector.y);
         }
+    }
+
+    LeftDown(){
+        this.bLeftIsPressed = true;
+        this.dispatchEvent(this.leftDown);
+    }
+
+    LeftUp(){
+        this.bLeftIsPressed = false;
+        this.dispatchEvent(this.leftUp);
+    }
+
+    RightDown(){
+        this.bRightIsPressed = true;
+        this.dispatchEvent(this.rightDown);
+    }
+
+    RightUp(){
+        this.bRightIsPressed = false;
+        this.dispatchEvent(this.rightUp);
     }
 }
 
@@ -94,6 +143,10 @@ class Controls{
             console.log(e.detail.key, e.detail.type);
         }
 
+        const MouseHandler = () => {
+            console.log("pressed");
+        }
+
         //Keys
         //Generic key listeners
         document.addEventListener('keydown', function(e){
@@ -113,6 +166,32 @@ class Controls{
             }
             if (key.bIsPressed){
                 key.KeyUp();
+            }
+        });
+
+        document.addEventListener('mousedown', (e) => {
+            switch (e.button){
+                case 0:
+                    if (!mouse.bLeftIsPressed){
+                        mouse.LeftDown();
+                    }
+                case 2:
+                    if (!mouse.bRightIsPressed){
+                        mouse.RightDown();
+                    }
+            }
+        });
+
+        document.addEventListener('mouseup', (e) => {
+            switch (e.button){
+                case 0:
+                    if (mouse.bLeftIsPressed){
+                        mouse.LeftUp();
+                    }
+                case 2:
+                    if (mouse.bRightIsPressed){
+                        mouse.RightUp();
+                    }
             }
         });
 
@@ -140,6 +219,8 @@ class Controls{
             spaceship.RightRoll(false);
             if(keys.get('a').bIsPressed)keys.get('a').KeyDown();
         });
+
+        mouse.addEventListener('mouseLeftDown', () => {spaceship.SelectPlanet()});
 
 
         //Mouse
