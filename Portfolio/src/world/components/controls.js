@@ -120,11 +120,14 @@ class Mouse extends EventTarget{
 }
 
 class Controls{
-    constructor(spaceship){
+    constructor(world, spaceship){
         controls = this;
         if (!spaceship)
         {
             console.error("controls: setupControls: no spaceship given");
+        }
+        if (!world){
+            console.error("controls: setupControls: no world given");
         }
 
         const keys = new Map();
@@ -154,6 +157,9 @@ class Controls{
             const key = keys.get(e.key.toLowerCase());
             if (!key){
                 return;
+            }
+            if (!world.bPointerLocked){
+                world.focusWorld();
             }
             if (!key.bIsPressed){
                 key.KeyDown();

@@ -27,6 +27,18 @@ let spaceship;
 
 class World{
     constructor(container){
+        this.bPointerLocked = false;
+        this.container = container;
+
+        container.addEventListener('pointerlockchange', (e) => {
+            if (document.pointerLockElement === container){
+                container.bPointerLocked = true;
+            }
+            else{
+                container.bPointerLocked = false;
+            }
+        });
+
         renderer = createRenderer(container);
         camera = createCamera({
             FOV: 45,
@@ -93,7 +105,7 @@ class World{
 
         let raycastUtil = new RaycastUtil();
 
-        let controls = new Controls(spaceship);
+        let controls = new Controls(this, spaceship);
 
         loop.updateables.push(
             light,
@@ -122,6 +134,14 @@ class World{
         resizer.onResize = () => {
             this.render();
         };
+    }
+
+    focusWorld = async() => {
+        await this.container.requestPointerLock({ unadjustedMovement:true });
+    }
+
+    unfocusWorld = async() => {
+        await this.container.exitPointerLock();
     }
 
     render(){
