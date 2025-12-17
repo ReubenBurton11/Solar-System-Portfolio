@@ -2,11 +2,17 @@ import { BoxGeometry, MeshPhongMaterial, Object3D, Mesh, Shape, ConeGeometry, Ve
 import { ConvexGeometry } from 'three/examples/jsm/geometries/ConvexGeometry.js'
 
 class Spaceship extends Object3D{
-    constructor(props){
+    constructor(world, props){
         super();
 
         let rotation = this.rotation; 
         let position = this.position;
+
+        if (!world){
+            console.log("spaceship: no world assigned");
+            return;
+        }
+        this.world = world;
 
         this.useDrag = true;
 
@@ -175,12 +181,21 @@ class Spaceship extends Object3D{
     }
 
     SelectPlanet = () => {
+        if (!this.world.bPointerLocked){
+            return;
+        }
         if (!this.focusedPlanet){
             console.log("no planet");
             return;
         }
 
-        console.log(this.focusedPlanet.name)
+        this.focusedPlanet.AddPlanetPanel();
+        this.world.unfocusWorld();
+    }
+
+    UnselectPlanet = () => {
+        this.focusedPlanet.RemovePlanetPanel();
+        this.world.focusWorld();
     }
 
     tick = (delta) => {

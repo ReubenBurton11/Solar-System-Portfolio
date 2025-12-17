@@ -1,6 +1,7 @@
 import { Clock } from "three";
 
 const clock = new Clock();
+let bPaused = true;
 
 class Loop{
     constructor(camera, scene, renderer){
@@ -17,15 +18,27 @@ class Loop{
         });
     } 
 
+    pause() {
+        console.log("pause");
+        bPaused = true;
+    }
+
+    resume() {
+        console.log("resume");
+        bPaused = false;
+    }
+
     stop() {
         this.renderer.setAnimationLoop(null);
     }
 
     tick() {
         const delta = clock.getDelta();
-        for (const object of this.updateables)
-        {
-            object.tick(delta);
+        if (!bPaused){
+            for (const object of this.updateables)
+            {
+                object.tick(delta);
+            }
         }
     }
 }

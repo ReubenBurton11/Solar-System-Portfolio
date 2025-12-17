@@ -33,10 +33,6 @@ onMounted(() => {
     }
     sceneCanvas = document.getElementById("sceneCanvas");
     startScene(sceneCanvas);
-
-    sceneCanvas.addEventListener('click', async() => {
-        await sceneCanvas.requestPointerLock({ unadjustedMovement:true });
-    })
 })
 </script>
 

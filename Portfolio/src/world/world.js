@@ -30,15 +30,6 @@ class World{
         this.bPointerLocked = false;
         this.container = container;
 
-        container.addEventListener('pointerlockchange', (e) => {
-            if (document.pointerLockElement === container){
-                container.bPointerLocked = true;
-            }
-            else{
-                container.bPointerLocked = false;
-            }
-        });
-
         renderer = createRenderer(container);
         camera = createCamera({
             FOV: 45,
@@ -74,16 +65,29 @@ class World{
                 position: new Vector3(0, 30, -1000),
             }),
             new Planet({
-                name: "Cheek No.1",
                 radius: 200,
                 position: new Vector3(400, 0, -600),
                 color: "#F0AE7F",
+
+                name: "Cheek No.1",
+                description: "Fat, juicy, wide and round",
             }),
             new Planet({
-                name: "Cheek No.2",
                 radius: 188,
                 position: new Vector3(594, 0, -600),
                 color: "#F0AE7F",
+
+                name: "Cheek No.2",
+                description: "An enigmatic beauty, who's allure cannot be resisted",
+            }),
+            new Planet({
+                radius: 150,
+                position: new Vector3 (-250, -100, 800),
+                color: "rgba(64, 255, 0, 1)",
+
+                name: "Music Visualiser",
+                description: "Check out this cool music visualiser I made",
+                link: "https://reuben-burton.page.gd/music-visualiser.html",
             })
         ];
 
@@ -97,7 +101,7 @@ class World{
             position: new Vector3(0, -10, -150),
         });
 
-        spaceship = new Spaceship({
+        spaceship = new Spaceship(this, {
             cam: camera,
             camOffset: new Vector3(0, 2, 10),
             camRotation: new Vector3(-(Math.PI / 20), 0, 0),
@@ -134,6 +138,17 @@ class World{
         resizer.onResize = () => {
             this.render();
         };
+
+        document.addEventListener('pointerlockchange', (e) => {
+            if (document.pointerLockElement === this.container){
+                this.bPointerLocked = true;
+                loop.resume();
+            }
+            else{
+                this.bPointerLocked = false;
+                loop.pause();
+            }
+        });
     }
 
     focusWorld = async() => {
@@ -141,7 +156,7 @@ class World{
     }
 
     unfocusWorld = async() => {
-        await this.container.exitPointerLock();
+        await document.exitPointerLock();
     }
 
     render(){

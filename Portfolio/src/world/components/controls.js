@@ -136,6 +136,7 @@ class Controls{
         keys.set('s', new Key('s'));
         keys.set('d', new Key('d'));
         keys.set('shift', new Key('shift'));
+        keys.set(' ', new Key(' '));
         this.keys = keys;
 
         mouse = new Mouse();
@@ -159,7 +160,14 @@ class Controls{
                 return;
             }
             if (!world.bPointerLocked){
+                if (spaceship.focusedPlanet){
+                    if (!spaceship.focusedPlanet.panel){
+                        world.focusWorld();
+                    }
+                }
+                else{
                 world.focusWorld();
+                }
             }
             if (!key.bIsPressed){
                 key.KeyDown();
@@ -231,6 +239,17 @@ class Controls{
         keys.get('shift').addEventListener('keyUp', () => {
             spaceship.TurboBoost(false);
             if(keys.get('w').bIsPressed)keys.get('w').KeyDown();
+        });
+
+        keys.get(' ').addEventListener('keyDown', () => {
+            if (!spaceship.focusedPlanet){
+                return;
+            }
+            if (!spaceship.focusedPlanet.panel)
+            {
+                return;
+            }
+            spaceship.UnselectPlanet();
         });
 
         mouse.addEventListener('mouseLeftDown', () => {spaceship.SelectPlanet()});
