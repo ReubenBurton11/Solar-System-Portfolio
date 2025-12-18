@@ -17,6 +17,9 @@ import SBTop from "../assets/cubemap/top.png";
 import SBBottom from "../assets/cubemap/bottom.png";
 import SBBack from "../assets/cubemap/back.png";
 import SBFront from "../assets/cubemap/front.png";
+import ControlsPanel from "@/components/Controls.vue";
+import { AddPermanentUI } from "./systems/ui.js";
+import musicVis from "../assets/music-visualiser.html?raw";
 
 
 let camera;
@@ -87,7 +90,7 @@ class World{
 
                 name: "Music Visualiser",
                 description: "Check out this cool music visualiser I made",
-                slot: `<iframe src="https://reuben-burton.page.gd/music-visualiser.html"></iframe>`,
+                slot: musicVis,
             })
         ];
 
@@ -139,6 +142,8 @@ class World{
         resizer.onResize = () => {
             this.render();
         };
+
+        AddPermanentUI(ControlsPanel);
 
         document.addEventListener('pointerlockchange', (e) => {
             if (document.pointerLockElement === this.container){

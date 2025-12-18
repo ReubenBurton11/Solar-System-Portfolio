@@ -2,11 +2,11 @@
     <div class="panel">
         <h1>{{ title }}</h1>
         <div id="slot">{{ slot }}</div>
+        <p class="foot">Press space to continue...</p>
     </div>
 </template>
 
 <script setup>
-import { VueElement } from 'vue';
 
 
 const props = defineProps({
@@ -31,5 +31,13 @@ const props = defineProps({
         right: 50px;
         top:50px;
         bottom: 50px;
+    }
+    #slot{
+        margin: 3%;
+        padding: 3%;
+    }
+    .foot{
+        position: absolute;
+        bottom: 1%;
     }
 </style>

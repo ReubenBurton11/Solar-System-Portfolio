@@ -2,7 +2,7 @@ import {createApp} from "vue";
 
 let UIDiv;
 
-function AddUI(element, props, slot = null){
+function AddUI(element, props = {}, slot = null){
     RemoveUI();
     UIDiv = document.createElement('div');
     UIDiv.id = "UIDiv";
@@ -22,4 +22,12 @@ function RemoveUI(){
     }
 }
 
-export {AddUI, RemoveUI};
+function AddPermanentUI(element){
+    const UIElement = document.createElement('div');
+    UIElement.id = "UI";
+    document.getElementById("sceneDiv").appendChild(UIElement);
+    const UI = createApp(element).mount("#UI");
+    return UI;
+}
+
+export {AddUI, RemoveUI, AddPermanentUI};
