@@ -1,6 +1,8 @@
 import { MeshPhongMaterial, Object3D, SphereGeometry, Mesh, Vector3 } from "three";
 import PlanetPanel from "@/components/PlanetPanel.vue";
+import HoverPanel from "@/components/HoverPanel.vue";
 import { createApp } from "vue";
+import { AddUI, RemoveUI } from "../systems/ui";
 
 let panelDiv;
 
@@ -23,21 +25,39 @@ class Planet extends Object3D{
         mesh.position.set(0,0,0).add(props.position ? props.position : new Vector3(0, 0, 0));
     }
 
+    AddHoverPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        const props = {
+            title: this.name,
+        }
+        this.panel = AddUI(HoverPanel, props);
+    }
+
+    RemoveHoverPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        this.panel = null;
+    }
+
     AddPlanetPanel(){
-        panelDiv = document.createElement('div');
-        panelDiv.id = "panelDiv";
-        document.getElementById('sceneDiv').appendChild(panelDiv);
+        if (this.panel){
+            RemoveUI();
+        }
         const props = {
             title: this.name,
             desc: this.description,
             link: this.link,
         };
-        this.panel = createApp(PlanetPanel, props).mount("#panelDiv");
-        this.panel.$slots.default = [];
+        this.panel = AddUI(PlanetPanel, props);
     }
 
     RemovePlanetPanel(){
-        document.getElementById('sceneDiv').removeChild(panelDiv);
+        if (this.panel){
+            RemoveUI();
+        }
         this.panel = null;
     }
 }

@@ -195,6 +195,7 @@ class Spaceship extends Object3D{
 
     UnselectPlanet = () => {
         this.focusedPlanet.RemovePlanetPanel();
+        this.focusedPlanet = null;
         this.world.focusWorld();
     }
 
@@ -245,11 +246,17 @@ class Spaceship extends Object3D{
             this.raycaster.checkAll(hitPlanets, {tag: "Planet"});
             if (hitPlanets.length > 0){
                 if (this.focusedPlanet !== hitPlanets[0].object.parent){
-                this.focusedPlanet = hitPlanets[0].object.parent;
+                    this.focusedPlanet = hitPlanets[0].object.parent;
+                    
+                    this.focusedPlanet.AddHoverPanel();
                 }
             }
             else{
-                this.focusedPlanet = null;
+                if (this.focusedPlanet != null){
+                    this.focusedPlanet.RemoveHoverPanel();
+
+                    this.focusedPlanet = null;
+                }
             }
         }
     }

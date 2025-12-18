@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="panel">
         <h1>{{ title }}</h1>
         <slot></slot>
         <p>{{ desc }}</p>
@@ -30,7 +30,6 @@ const props = defineProps({
 <style scoped>
     div{
         position: fixed;
-        background-color: rgb(100, 100, 100, 0.5);
         width: 50%;
         height: auto;
         z-index: 10;
