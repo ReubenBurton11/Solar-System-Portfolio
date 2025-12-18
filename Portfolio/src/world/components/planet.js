@@ -1,10 +1,7 @@
 import { MeshPhongMaterial, Object3D, SphereGeometry, Mesh, Vector3 } from "three";
 import PlanetPanel from "@/components/PlanetPanel.vue";
 import HoverPanel from "@/components/HoverPanel.vue";
-import { createApp } from "vue";
 import { AddUI, RemoveUI } from "../systems/ui";
-
-let panelDiv;
 
 class Planet extends Object3D{
     constructor(props){
@@ -12,9 +9,9 @@ class Planet extends Object3D{
 
         this.name = props.name ? props.name : "Title";
         this.description = props.description ? props.description : "Description";
-        this.link = props.link ? props.link : "https://www.heinz.com/en-GB";
+        this.slot = props.slot ? props.slot : null;
 
-        this.tag = "Planet";
+        this.tag = "interactable";
         this.panel = null;
 
         const geo = new SphereGeometry(props.radius ? props.radius : 10);
@@ -31,6 +28,7 @@ class Planet extends Object3D{
         }
         const props = {
             title: this.name,
+            desc: this.description,
         }
         this.panel = AddUI(HoverPanel, props);
     }
@@ -48,10 +46,9 @@ class Planet extends Object3D{
         }
         const props = {
             title: this.name,
-            desc: this.description,
-            link: this.link,
         };
-        this.panel = AddUI(PlanetPanel, props);
+        const slot = this.slot;
+        this.panel = AddUI(PlanetPanel, props, slot);
     }
 
     RemovePlanetPanel(){

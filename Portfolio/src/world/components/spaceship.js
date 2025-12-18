@@ -243,11 +243,16 @@ class Spaceship extends Object3D{
         if (this.raycaster){
             let hitPlanets = [];
             this.raycaster.setFromCamera(new Vector2(0, 0), this.camera, {far: this.visionDistance});
-            this.raycaster.checkAll(hitPlanets, {tag: "Planet"});
+            this.raycaster.checkAll(hitPlanets, {tag: "interactable"});
             if (hitPlanets.length > 0){
-                if (this.focusedPlanet !== hitPlanets[0].object.parent){
-                    this.focusedPlanet = hitPlanets[0].object.parent;
-                    
+                if (hitPlanets[0].object.parent.name.slice(0, -3) == "Letter"){
+                    if (this.focusedPlanet !== hitPlanets[0].object.parent.parent){
+                        this.focusedPlanet = hitPlanets[0].object.parent.parent;
+                        this.focusedPlanet.AddHoverPanel();
+                    }
+                }
+                else if (this.focusedPlanet !== hitPlanets[0].object.parent){
+                    this.focusedPlanet = hitPlanets[0].object.parent; 
                     this.focusedPlanet.AddHoverPanel();
                 }
             }

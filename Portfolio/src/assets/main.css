@@ -8,8 +8,30 @@
   top: 0;
 }
 
+:root{
+  --primaryColor: rgb(150, 150, 150, 1);
+}
+
 .panel {
   background-color: rgb(40, 40, 40, 0.6);
+  border-color: var(--primaryColor);
+  border-style:solid;
+  border-radius: 10px;
+  border-width: 2px;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: -6px;
+  outline-color: var(--primaryColor);
+}
+
+h1, p, a {
+  font-family: "Monaco", monospace;
+  color: var(--primaryColor);
+  padding: 10px;
+}
+
+h1 {
+  font-style: bold;
 }
 
 

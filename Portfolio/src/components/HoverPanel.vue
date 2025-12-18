@@ -1,6 +1,8 @@
 <template>
     <div class="panel">
         <h1>{{ title }}</h1>
+        <p>{{ desc }}</p>
+        <p>Left click to see more...</p>
     </div>
 </template>
 
@@ -10,17 +12,20 @@
             type: String,
             default: "Title",
         },
+        desc:{
+            type: String,
+            default: "Description",
+        }
     });
 </script>
 
 <style scoped>
-    div{
+    .panel{
         position: fixed;
-        border-style: solid;
-        border-radius: 10px;
-        width: 100px;
+        width: 300px;
         height: auto;
         bottom: 55%;
         left: 52%;
+        border-bottom-left-radius: 0;
     }
 </style>

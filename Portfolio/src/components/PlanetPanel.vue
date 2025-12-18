@@ -1,34 +1,29 @@
 <template>
     <div class="panel">
         <h1>{{ title }}</h1>
-        <slot></slot>
-        <p>{{ desc }}</p>
-        <a :href="link" target="_blank">View Here</a>
+        <div id="slot">{{ slot }}</div>
     </div>
 </template>
 
 <script setup>
+import { VueElement } from 'vue';
+
 
 const props = defineProps({
     title:{
         type:String,
         default: "Title"
     },
-    desc:{
+    slot:{
         type: String,
-        default: "description",
-    },
-    link:{
-        type: String,
-        default: "https://www.heinz.com/en-GB",
-    },
-
+        default: null,
+    }
 });
 
 </script>
 
 <style scoped>
-    div{
+    .panel{
         position: fixed;
         width: 50%;
         height: auto;
@@ -36,8 +31,5 @@ const props = defineProps({
         right: 50px;
         top:50px;
         bottom: 50px;
-
-        border-style: solid;
-        border-radius: 10px;
     }
 </style>

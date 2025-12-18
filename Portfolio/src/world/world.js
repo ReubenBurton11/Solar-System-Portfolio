@@ -87,18 +87,19 @@ class World{
 
                 name: "Music Visualiser",
                 description: "Check out this cool music visualiser I made",
-                link: "https://reuben-burton.page.gd/music-visualiser.html",
+                slot: `<iframe src="https://reuben-burton.page.gd/music-visualiser.html"></iframe>`,
             })
         ];
 
         let myName = new FloatingLetter({
-            name: "Reuben Burton Text",
             text: "Reuben Burton",
             size: 20,
             spacing: 1.15,
             alignment: "centre",
             color: ["#FFFFFF", "#D4D4D4", "#AAAAAA", "#7C7C7C", "#525252", "#7C7C7C", "#AAAAAA", "#D4D4D4"],
             position: new Vector3(0, -10, -150),
+
+            name: "Me, Reuben Burton",
         });
 
         spaceship = new Spaceship(this, {

@@ -2,6 +2,9 @@ import { Loader, Mesh, MeshPhongMaterial, Object3D, Vector3} from "three";
 import {TextGeometry} from "three/examples/jsm/geometries/TextGeometry.js";
 import { Font, FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import HelvetikerFont from "three/examples/fonts/helvetiker_bold.typeface.json";
+import PlanetPanel from "@/components/PlanetPanel.vue";
+import HoverPanel from "@/components/HoverPanel.vue";
+import { AddUI, RemoveUI } from "../systems/ui";
 
 class Letter extends Object3D{
     constructor(char, font, size, depth, color){
@@ -29,6 +32,11 @@ class FloatingLetter extends Object3D{
         super();
 
         this.name = props.name;
+        this.description = props.description ? props.description : "Description";
+        this.slot = props.slot ? props.slot : null;
+        this.tag = "interactable";
+
+        this.panel = null;
 
         const loader = new FontLoader();
         const font = loader.parse(HelvetikerFont);
@@ -108,6 +116,42 @@ class FloatingLetter extends Object3D{
         };
 
         this.position.set(...(props.position ? props.position : new Vector3(0, 0, 0)));
+    }
+
+    AddHoverPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        const props = {
+            title: this.name,
+            desc: this.description,
+        }
+        this.panel = AddUI(HoverPanel, props);
+    }
+
+    RemoveHoverPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        this.panel = null;
+    }
+
+    AddPlanetPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        const props = {
+            title: this.name,
+        };
+        const slot = this.slot;
+        this.panel = AddUI(PlanetPanel, props, slot);
+    }
+
+    RemovePlanetPanel(){
+        if (this.panel){
+            RemoveUI();
+        }
+        this.panel = null;
     }
 }
 
