@@ -1,0 +1,38 @@
+<div style="width:100%; display: block; align-content: center; text-align: center;">
+    <img src="../assets/solar-system-portfolio.png" alt="solar system portfolio" style="width: 90%;">
+    <br>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="HTML5 logo" width="50">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Official_CSS_Logo.svg" alt="CSS logo" width="50">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="JavaScript logo" width="50">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/9/95/Vue.js_Logo_2.svg" alt="Vue logo" width="50">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Three.js_Icon.svg" alt="Three logo" width="50">
+    <br>
+    <a href="https://github.com/ReubenBurton11/Solar-System-Portfolio.git" target="_blank">Git repo</a>
+</div>
+<p>I wanted to make a portfolio that would stand out against the hundreds of others,
+    so I decided to make mine a space exploration experience. Since my career goals 
+    revolve around gameplay programming and front-end web development, this seemed like
+    a natural blending of the two.
+</p>
+<br>
+<p>I started this project by making a basic scene in threejs and adding a spaceship with basic
+    movement, using setting a velocity value and applying that to the position every tick. I soon
+    found the limitations of that and changed to a force based movement system which allows for 
+    constant acceleration when a key is pressed. I also realised that, although there's no drag in 
+    space, it was difficult to fly accurately without any drag so I created a drag value that's 
+    proportional to the current velocity and is applied to the velocity every frame.
+</p>
+<br>
+<p>When creating controls, I started by using lots of if statements in the tick function in coordination 
+    with key down and key up DOM events. But this wasn't very readable so I created a key and a mouse class 
+    each with relevant custom events that handle all the necessary inputs and can be bound to functions in 
+    a much more readable fashion.
+</p>
+<br>
+<p>For the UI, I used Vue components, creating and removing them at runtime. I used Vue's props to pass 
+    values like the title and description into the component. I created a planet class that creates UI panels 
+    when a raycast hits it and when it is selected. It's constructor takes props that get sent to the UI 
+    components props to populate universal values, however, I wanted to be able to send more specific and 
+    unique data to the panels so I could make things like this. So I made a custom slot that can take a html 
+    file, it gets set in the planets props and sent to the UI component.
+</p>

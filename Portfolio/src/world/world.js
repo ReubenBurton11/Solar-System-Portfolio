@@ -20,6 +20,8 @@ import SBFront from "../assets/cubemap/front.png";
 import ControlsPanel from "@/components/Controls.vue";
 import { AddPermanentUI } from "./systems/ui.js";
 import musicVis from "../assets/music-visualiser.html?raw";
+import portfolio from "../assets/solar-system-portfolio.html?raw";
+import me from "../assets/me.html?raw";
 
 
 let camera;
@@ -57,41 +59,25 @@ class World{
             environmentMap: scene.background,
         });
 
-        let cube = createCube({
-
-        });
-
         let planets = [
             new Planet({
-                name: "That Big Ball In Da Sky",
-                radius: 100,
-                position: new Vector3(0, 30, -1000),
-            }),
-            new Planet({
                 radius: 200,
-                position: new Vector3(400, 0, -600),
-                color: "#F0AE7F",
+                position: new Vector3(-100, 50, -1000),
+                color: "rgba(255, 159, 5, 1)",
 
-                name: "Cheek No.1",
-                description: "Fat, juicy, wide and round",
-            }),
-            new Planet({
-                radius: 188,
-                position: new Vector3(594, 0, -600),
-                color: "#F0AE7F",
-
-                name: "Cheek No.2",
-                description: "An enigmatic beauty, who's allure cannot be resisted",
+                name: "Solar System Portfolio",
+                description: "A portfolio presented as a space exploration experience",
+                slot: portfolio,
             }),
             new Planet({
                 radius: 150,
-                position: new Vector3 (-250, -100, 800),
-                color: "rgba(64, 255, 0, 1)",
+                position: new Vector3 (250, 300, -1400),
+                color: "rgba(72, 59, 255, 1)",
 
                 name: "Music Visualiser",
-                description: "Check out this cool music visualiser I made",
+                description: "A music visualiser with a custom music player",
                 slot: musicVis,
-            })
+            }),
         ];
 
         let myName = new FloatingLetter({
@@ -103,6 +89,8 @@ class World{
             position: new Vector3(0, -10, -150),
 
             name: "Me, Reuben Burton",
+            description: "A student programmer at Falmouth University",
+            slot: me,
         });
 
         spaceship = new Spaceship(this, {
@@ -117,7 +105,6 @@ class World{
 
         loop.updateables.push(
             light,
-            cube, 
             spaceship,
             controls,
         );
@@ -125,7 +112,6 @@ class World{
         scene.add(
             ambientLight,
             light, 
-            cube, 
             ...planets,
             myName,
             spaceship,

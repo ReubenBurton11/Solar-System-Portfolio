@@ -41,7 +41,7 @@ class Spaceship extends Object3D{
         this.add(this.camBoom);
 
         this.raycaster;
-        this.visionDistance = 1000;
+        this.visionDistance = 10000;
         this.focusedPlanet = null;
 
         const dims = props.dimensions ? [props.dimensions.x ? props.dimensions.x : 1, props.dimensions.y ? props.dimensions.y : 1, props.dimensions.z ? props.dimensions.z : 1] : [1, 1, 2]; 

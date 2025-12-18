@@ -31,10 +31,15 @@ const props = defineProps({
         right: 50px;
         top:50px;
         bottom: 50px;
+        padding-left: 20px;
+        padding-right: 20px;
     }
     #slot{
-        margin: 3%;
-        padding: 3%;
+        margin:0;
+        padding: 0;
+        width: 100%;
+        height: 80%;
+        overflow-x: auto;
     }
     .foot{
         position: absolute;

@@ -9,11 +9,11 @@
 }
 
 :root{
-  --primaryColor: rgb(150, 150, 150, 1);
+  --primaryColor: rgb(200, 200, 200, 1);
 }
 
 .panel {
-  background-color: rgb(40, 40, 40, 0.6);
+  background-color: rgba(90, 90, 90, 0.6);
   border-color: var(--primaryColor);
   border-style:solid;
   border-radius: 10px;
@@ -24,13 +24,13 @@
   outline-color: var(--primaryColor);
 }
 
-h1, p, a {
+h1, h2, p, a {
   font-family: "Monaco", monospace;
   color: var(--primaryColor);
   padding: 10px;
 }
 
-h1 {
+h1, h2 {
   font-style: bold;
 }
 
